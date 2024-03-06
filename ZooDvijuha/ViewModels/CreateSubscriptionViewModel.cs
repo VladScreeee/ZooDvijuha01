@@ -2,14 +2,12 @@
 
 namespace ZooDvijuha.ViewModels
 {
-    public class EditSubscriptionViewModel
+    public class CreateSubscriptionViewModel
     {
-        internal readonly string AppUserId;
-
         public int Id { get; set; }
         public string Title { get; set; }
-        public int Price { get; set; }
         public string Description { get; set; }
         public SubscriptionLevel SubscriptionLevel { get; set; }
+        public string AppUserId { get; set; }
     }
 }

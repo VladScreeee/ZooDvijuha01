@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Eventing.Reader;
 using System.Net;
+using System.Runtime.CompilerServices;
 using ZooDvijuha.Data;
 using ZooDvijuha.Interfaces;
 using ZooDvijuha.Models;
@@ -11,11 +13,12 @@ namespace ZooDvijuha.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SubscriptionController (ApplicationDbContext context, ISubscriptionRepository subscriptionRepository)
+        public SubscriptionController (ISubscriptionRepository subscriptionRepository, IHttpContextAccessor contextAccessor)
         {
-            _context = context;
             _subscriptionRepository = subscriptionRepository;
+            _httpContextAccessor = contextAccessor;
         }
         public async Task<IActionResult> IndexAsync()
         {
@@ -23,11 +26,20 @@ namespace ZooDvijuha.Controllers
             return View(subscriptions);
         }
 
+        public async Task<IActionResult> Create()
+        {
+            var curUserId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var createSubscriptionViewModel = new CreateSubscriptionViewModel { AppUserId = curUserId };
+            return View(createSubscriptionViewModel);
+        }
+
+        [HttpPost]
+
 
         public async Task<IActionResult> Detail(int id)
         {
-            //Subscription subscription = await _subscriptionRepository.GetByIdAsync(id);
-            Subscription subscription = _context.Subscriptions.FirstOrDefault(s => s.Id == id);
+            Subscription subscription = await _subscriptionRepository.GetByIdAsync(id);
+           // Subscription subscription = _context.Subscriptions.FirstOrDefault(s => s.Id == id);
             return View(subscription);
         }
 
@@ -44,5 +56,25 @@ namespace ZooDvijuha.Controllers
             };
             return View(subscriptionVM);
         }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditSubscriptionViewModel subscriptionVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit");
+                return View("Edit", subscriptionVM);
+            }
+
+            var subscription = new Subscription
+            {
+                Id = id,
+                Title = subscriptionVM.Title,
+                Price = subscriptionVM.Price,
+                Description = subscriptionVM.Description,
+            };
+            _subscriptionRepository.Update(subscription);
+            return RedirectToAction("Index");
+        }
+        
     }
 }

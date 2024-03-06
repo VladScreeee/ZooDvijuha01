@@ -30,10 +30,16 @@ namespace ZooDvijuha.Repository
             return await _context.Subscriptions.ToListAsync();
         }
 
-        public Task<IEnumerable<Subscription>> GetByIdAsync(int id)
+        public async Task<Subscription> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Subscriptions.FirstOrDefaultAsync(i => i.Id == id);
+            
         }
+
+     //   public async Task<Subscription> GetByIdAsyncNoTracking(int id)
+      //  {
+      //      return await _context.Subscriptions.FirstOrDefaultAsync(i => i.Id == id);
+      //  }
 
         public bool Save()
         {
@@ -43,7 +49,13 @@ namespace ZooDvijuha.Repository
 
         public bool Update(Subscription subscription)
         {
-            throw new NotImplementedException();
+            _context.Update(subscription);
+            return Save();
+        }
+
+        async Task<Subscription> ISubscriptionRepository.GetByIdAsync(int id)
+        {
+            return await _context.Subscriptions.FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }
