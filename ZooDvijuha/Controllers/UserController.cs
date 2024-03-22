@@ -28,7 +28,19 @@ namespace ZooDvijuha.Controllers
                 };
                 result.Add(userViewModel);
             }
-            return View();
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Detail(string id)
+        {
+            var user = await _userRepository.GetUserById(id);
+            var userDetailViewModel = new UserDetailViewModel()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+            return View(userDetailViewModel);
         }
     }
 }

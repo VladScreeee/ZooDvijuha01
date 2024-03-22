@@ -26,7 +26,7 @@ namespace ZooDvijuha.Controllers
             return View(subscriptions);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             var curUserId = _httpContextAccessor.HttpContext.User.GetUserId();
             var createSubscriptionViewModel = new CreateSubscriptionViewModel { AppUserId = curUserId };
@@ -35,6 +35,26 @@ namespace ZooDvijuha.Controllers
 
         [HttpPost]
 
+        public async Task<IActionResult> Create(CreateSubscriptionViewModel subscriptionVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var subscription = new Subscription
+                {
+                    Title = subscriptionVM.Title,
+                    Description = subscriptionVM.Description,
+                    SubscriptionLevel = subscriptionVM.SubscriptionLevel,
+                    AppUserId = subscriptionVM.AppUserId,
+                };
+                _subscriptionRepository.Add(subscription);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("", "smth got wrong");
+            }
+            return View(subscriptionVM);
+        }
 
         public async Task<IActionResult> Detail(int id)
         {
