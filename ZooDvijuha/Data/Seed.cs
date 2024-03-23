@@ -70,8 +70,8 @@ namespace ZooDvijuha.Data
                 {
                     var newAdminUser = new AppUser()
                     {
-                       // FirstName = "11",
-                        //LastName = "23",
+                        // FirstName = "11",  // TODO: add firstname 
+                        //LastName = "23",  // TODO: add lastname
                         UserName = "Admin",
                         Email = adminUserEmail,
                         EmailConfirmed = true,
@@ -94,6 +94,8 @@ namespace ZooDvijuha.Data
                 {
                     var newUser = new AppUser()
                     {
+                        //TODO: ADD firstName
+                        //TODO: add lastname
                         UserName = "User",
                         Email = userEmail,
                         EmailConfirmed = true,
