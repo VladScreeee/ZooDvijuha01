@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using ZooDvijuha.Interfaces;
 using ZooDvijuha.ViewModels;
 
 namespace ZooDvijuha.Controllers
 {
-    public class UserController: Controller
+    public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
 
@@ -18,7 +17,7 @@ namespace ZooDvijuha.Controllers
         {
             var users = await _userRepository.GetAllUsers();
             List<UserViewModel> result = new List<UserViewModel>();
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 var userViewModel = new UserViewModel()
                 {
@@ -30,7 +29,8 @@ namespace ZooDvijuha.Controllers
             }
             return View(result);
         }
-        [HttpPost]
+
+        [HttpPost] // TODO: remove it
         public async Task<IActionResult> Detail(string id)
         {
             var user = await _userRepository.GetUserById(id);
@@ -42,5 +42,9 @@ namespace ZooDvijuha.Controllers
             };
             return View(userDetailViewModel);
         }
+
+        //TODO: Add edit user
+
+        //TODO: Add delete user 
     }
 }
